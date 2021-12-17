@@ -27,7 +27,7 @@ public class Enrollment {
     private LocalDateTime date;
 
     @Deprecated
-    protected Enrollment(){
+    protected Enrollment() {
     }
 
     public Enrollment(Course course, User user) {

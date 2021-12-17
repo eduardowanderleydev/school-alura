@@ -2,10 +2,12 @@ package br.com.alura.school.enrollment;
 
 import br.com.alura.school.course.Course;
 import br.com.alura.school.course.CourseRepository;
+import br.com.alura.school.exceptions.EmptyEnrollmentsException;
+import br.com.alura.school.exceptions.ResourceNotFoundException;
+import br.com.alura.school.exceptions.UserAlreadyEnrolledInTheCourseException;
 import br.com.alura.school.support.validation.EnrollmentValidator;
 import br.com.alura.school.user.User;
 import br.com.alura.school.user.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +31,12 @@ public class EnrollmentController {
 
     @PostMapping("/courses/{courseCode}/enroll")
     ResponseEntity newEnrollment(@RequestBody @Valid NewEnrollmentRequest newEnrollmentRequest, @PathVariable("courseCode") String courseCode) {
-        User user = userRepository.findByUsername(newEnrollmentRequest.getUsername()).orElseThrow();
-        Course course = courseRepository.findByCode(courseCode).orElseThrow();
+        User user = userRepository.findByUsername(newEnrollmentRequest.getUsername()).orElseThrow(() -> new ResourceNotFoundException(String.format("username %s does not exists", newEnrollmentRequest.getUsername())));
+        Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResourceNotFoundException(String.format("course with %s code doest not exists.", courseCode)));
         Enrollment enrollment = new Enrollment(course, user);
 
-        if (EnrollmentValidator.isAlreadyEnrolled(user, course)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (EnrollmentValidator.isAlreadyEnrolled(user, course)) {
+            throw new UserAlreadyEnrolledInTheCourseException("user " + user.getUsername() + "is already enrolled in course with code " + courseCode);
         }
 
         enrollmentRepository.save(enrollment);
@@ -46,8 +48,8 @@ public class EnrollmentController {
     ResponseEntity enrollmentReport() {
         List<EnrollmentReportResponse> enrollmentReportResponseList = enrollmentRepository.generateReport();
 
-        if (enrollmentReportResponseList.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (enrollmentReportResponseList.isEmpty()) {
+            throw new EmptyEnrollmentsException("List of enrollments is empty!");
         }
 
         return ResponseEntity.ok().body(enrollmentReportResponseList);
