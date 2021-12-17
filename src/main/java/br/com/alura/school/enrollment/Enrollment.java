@@ -2,12 +2,10 @@ package br.com.alura.school.enrollment;
 
 import br.com.alura.school.course.Course;
 import br.com.alura.school.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -24,16 +22,17 @@ public class Enrollment {
     @ManyToOne
     private User user;
 
-    private LocalDate date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private LocalDateTime date;
 
+    @Deprecated
     protected Enrollment(){
-        this.date = LocalDate.now();
     }
 
-    public Enrollment(Course course, User user){
+    public Enrollment(Course course, User user) {
         this.course = course;
         this.user = user;
-        this.date = LocalDate.now();
     }
 
     public Long getId() {
@@ -48,7 +47,12 @@ public class Enrollment {
         return user;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
+    }
+
+    @PrePersist
+    public void setUp() {
+        this.date = LocalDateTime.now();
     }
 }

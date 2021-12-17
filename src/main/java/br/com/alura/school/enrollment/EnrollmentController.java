@@ -7,12 +7,10 @@ import br.com.alura.school.user.User;
 import br.com.alura.school.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class EnrollmentController {
@@ -43,4 +41,16 @@ public class EnrollmentController {
 
         return ResponseEntity.created(null).build();
     }
+
+    @GetMapping("/courses/enroll/report")
+    ResponseEntity enrollmentReport() {
+        List<EnrollmentReportResponse> enrollmentReportResponseList = enrollmentRepository.generateReport();
+
+        if (enrollmentReportResponseList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return ResponseEntity.ok().body(enrollmentReportResponseList);
+    }
+
 }
