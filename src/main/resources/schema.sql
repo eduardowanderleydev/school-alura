@@ -14,3 +14,14 @@ CREATE TABLE Course (
     name VARCHAR(20) NOT NULL UNIQUE,
     description VARCHAR(500)
 );
+
+DROP TABLE IF EXISTS Enrollment;
+
+CREATE TABLE Enrollment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    course_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    date DATE,
+    FOREIGN KEY(course_id) REFERENCES Course(id),
+    FOREIGN KEY(user_id) REFERENCES User(id)
+);

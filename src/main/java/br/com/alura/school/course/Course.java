@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-class Course {
+public class Course {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
