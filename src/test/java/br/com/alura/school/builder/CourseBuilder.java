@@ -13,7 +13,7 @@ public class CourseBuilder {
     private String description = DESCRIPTION_DEFAULT;
 
 
-    public static CourseBuilder OneCourse() {
+    public static CourseBuilder oneCourse() {
         return new CourseBuilder();
     }
 

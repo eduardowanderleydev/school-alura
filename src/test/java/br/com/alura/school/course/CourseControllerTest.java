@@ -2,6 +2,8 @@ package br.com.alura.school.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +34,7 @@ class CourseControllerTest {
         courseRepository.save(new Course("java-1", "Java OO", "Java and Object Orientation: Encapsulation, Inheritance and Polymorphism."));
 
         mockMvc.perform(get("/courses/java-1")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is("java-1")))
@@ -46,7 +48,7 @@ class CourseControllerTest {
         courseRepository.save(new Course("spring-2", "Spring Boot", "Spring Boot"));
 
         mockMvc.perform(get("/courses")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()", is(2)))
@@ -63,10 +65,32 @@ class CourseControllerTest {
         NewCourseRequest newCourseRequest = new NewCourseRequest("java-2", "Java Collections", "Java Collections: Lists, Sets, Maps and more.");
 
         mockMvc.perform(post("/courses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(newCourseRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonMapper.writeValueAsString(newCourseRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/courses/java-2"));
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "too much long course code, java, some description",
+            "code-ok, , some description",
+            " , name ok, some description",
+            "code-ok, too much long course name    . , some description",
+    })
+    void should_validate_bad_course_requests(String code, String name, String description) throws Exception {
+        NewCourseRequest newCourseRequest = new NewCourseRequest(code, name, description);
+
+        mockMvc.perform(post("/courses")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonMapper.writeValueAsString(newCourseRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_return_not_found_status_code() throws Exception {
+        mockMvc.perform(get("/courses/java-1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }

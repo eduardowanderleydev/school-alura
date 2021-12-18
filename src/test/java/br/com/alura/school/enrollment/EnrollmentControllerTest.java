@@ -122,10 +122,10 @@ class EnrollmentControllerTest {
         final User USER_3 = UserBuilder.oneUser().withUsername("arthur").withEmail("arthur@email.com").build();
         userRepository.saveAll(Arrays.asList(USER_1, USER_2, USER_3));
 
-        final Course COURSE_1 = CourseBuilder.OneCourse().build();
-        final Course COURSE_2 = CourseBuilder.OneCourse().withCode("maven-1").withName("maven").withDescription("Maven course").build();
-        final Course COURSE_3 = CourseBuilder.OneCourse().withCode("maven-2").withName("maven 2").withDescription("Maven course 2").build();
-        final Course COURSE_4 = CourseBuilder.OneCourse().withCode("maven-3").withName("maven 3").withDescription("Maven course 3").build();
+        final Course COURSE_1 = CourseBuilder.oneCourse().build();
+        final Course COURSE_2 = CourseBuilder.oneCourse().withCode("maven-1").withName("maven").withDescription("Maven course").build();
+        final Course COURSE_3 = CourseBuilder.oneCourse().withCode("maven-2").withName("maven 2").withDescription("Maven course 2").build();
+        final Course COURSE_4 = CourseBuilder.oneCourse().withCode("maven-3").withName("maven 3").withDescription("Maven course 3").build();
         courseRepository.saveAll(Arrays.asList(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
 
         enrollmentRepository.save(new Enrollment(COURSE_1, USER_1));
