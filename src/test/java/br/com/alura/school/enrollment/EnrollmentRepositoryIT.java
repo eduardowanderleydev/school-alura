@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @DataJpaTest
 @Sql(scripts = "classpath:schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class EnrollmentRepositoryIT {
+class EnrollmentRepositoryIT {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
@@ -46,13 +46,13 @@ public class EnrollmentRepositoryIT {
 
         List<EnrollmentReportResponse> enrollmentReportResponses = enrollmentRepository.generateReport();
 
-        Assertions.assertTrue(enrollmentReportResponses.size() == 3);
-        Assertions.assertTrue(enrollmentReportResponses.get(0).getEmail().equals("eduardo@email.com"));
-        Assertions.assertTrue(enrollmentReportResponses.get(0).getEnrollmentQuantity() == 4l);
-        Assertions.assertTrue(enrollmentReportResponses.get(1).getEmail().equals("giovana@email.com"));
-        Assertions.assertTrue(enrollmentReportResponses.get(1).getEnrollmentQuantity() == 2l);
-        Assertions.assertTrue(enrollmentReportResponses.get(2).getEmail().equals("arthur@email.com"));
-        Assertions.assertTrue(enrollmentReportResponses.get(2).getEnrollmentQuantity() == 1l);
+        Assertions.assertEquals(3, enrollmentReportResponses.size());
+        Assertions.assertEquals("eduardo@email.com", enrollmentReportResponses.get(0).getEmail());
+        Assertions.assertEquals(4l,enrollmentReportResponses.get(0).getEnrollmentQuantity() );
+        Assertions.assertEquals("giovana@email.com", enrollmentReportResponses.get(1).getEmail());
+        Assertions.assertEquals(2l, enrollmentReportResponses.get(1).getEnrollmentQuantity());
+        Assertions.assertEquals("arthur@email.com", enrollmentReportResponses.get(2).getEmail());
+        Assertions.assertEquals(1, enrollmentReportResponses.get(2).getEnrollmentQuantity());
     }
 
     private void insertEnrollmentData(User user, Course course) {
