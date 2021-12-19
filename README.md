@@ -32,6 +32,10 @@ Os seguintes endpoints estão implementados:
 - `POST /courses` adiciona um novo curso
 - `GET /courses/{code}` obtém os detalhes de um curso
 
+## Postman
+Caso queira, você pode testar algumas funcionalidades usando o postman <br> <br>
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/18114710-2822f65b-5d85-4030-b18b-3bb110e6b559?action=collection%2Ffork&collection-url=entityId%3D18114710-2822f65b-5d85-4030-b18b-3bb110e6b559%26entityType%3Dcollection%26workspaceId%3Db3aff825-e77a-4568-a337-a6cf0a521eec)
+
 ## Sobre o que você deve fazer
 
 Devem ser implementadas as seguintes tarefas.
